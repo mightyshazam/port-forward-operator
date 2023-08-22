@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: port-forward-operator
+  namespace: port-forward-operator-system
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: port-forward-operator

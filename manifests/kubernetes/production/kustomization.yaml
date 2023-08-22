@@ -1,0 +1,9 @@
+commonLabels:
+  app.kubernetes.io/name: port-forward-controller
+
+resources:
+  - crdv1.forwardedservice.yaml
+  - deployment.port-forward-controller.yaml
+  - namespace.port-forward-operator-system.yaml
+  - rbac.port-forward-controller.yaml
+  - service.port-forward-controller.yaml

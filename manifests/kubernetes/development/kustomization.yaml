@@ -1,0 +1,27 @@
+resources:
+  - ../production
+patches:
+  - target:
+      kind: Deployment
+      name: port-forward-operator
+      version: v1
+      group: apps
+    patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: port-forward-operator
+        namespace: port-forward-operator-system
+      spec:
+        template:
+          spec:
+            containers:
+              - name: controller
+                args:
+                  - controller
+                  - --image
+                  - rancher/kubectl:v1.26.1
+                image: docker-port-forward-operator
+                env:
+                  - name: SERVICE_CONTAINER_IMAGE
+                    value: docker-port-forward-operator

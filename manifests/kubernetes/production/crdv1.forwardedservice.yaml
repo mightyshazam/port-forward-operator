@@ -1,0 +1,78 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: forwardedservices.port-forward-operator.rs
+spec:
+  group: port-forward-operator.rs
+  names:
+    categories: []
+    kind: ForwardedService
+    plural: forwardedservices
+    shortNames:
+    - fwd
+    singular: forwardedservice
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns: []
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: Auto-generated derived type for ForwardedServiceSpec via `CustomResource`
+        properties:
+          spec:
+            properties:
+              kube_config:
+                properties:
+                  cluster:
+                    nullable: true
+                    type: string
+                  context:
+                    type: string
+                  key:
+                    nullable: true
+                    type: string
+                  secret:
+                    type: string
+                  user:
+                    nullable: true
+                    type: string
+                required:
+                - context
+                - secret
+                type: object
+              namespace:
+                nullable: true
+                type: string
+              ports:
+                items:
+                  pattern: \d{0,5}(:(\d{0,5}))?
+                  type: string
+                minItems: 1
+                type: array
+              service:
+                type: string
+            required:
+            - kube_config
+            - ports
+            - service
+            type: object
+          status:
+            description: The status object of `ForwardedService`
+            nullable: true
+            properties:
+              pod_name:
+                type: string
+              service_name:
+                type: string
+            required:
+            - pod_name
+            - service_name
+            type: object
+        required:
+        - spec
+        title: ForwardedService
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -1,0 +1,45 @@
+---
+# Scoped service account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: port-forward-operator
+  labels:
+    app: port-forward-operator
+  namespace: port-forward-operator-system
+automountServiceAccountToken: true
+
+---
+# Access for the service account
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: port-forward-operator
+rules:
+  - apiGroups: ["port-forward-operator.rs"]
+    resources: ["forwardedservices", "forwardedservices/status"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["events.k8s.io"]
+    resources: ["events"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["pods", "services"]
+    verbs: ["create", "delete", "get", "patch", "update"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["create", "delete", "get", "patch", "update"]
+
+---
+# Binding the role to the account
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: port-forward-operator
+subjects:
+  - kind: ServiceAccount
+    namespace: port-forward-operator-system
+    name: port-forward-operator
+roleRef:
+  kind: ClusterRole
+  name: port-forward-operator
+  apiGroup: rbac.authorization.k8s.io

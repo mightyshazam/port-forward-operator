@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: port-forward-operator
+  namespace: port-forward-operator-system
+spec:
+  selector:
+    matchLabels:
+      app: port-forward-operator
+  template:
+    metadata:
+      labels:
+        app: port-forward-operator
+    spec:
+      serviceAccountName: port-forward-operator
+      containers:
+        - name: controller
+          args:
+            - controller
+            - --image
+            - ghcr.io/mightyshazam/port-forward-operator:v0.1.0
+          image: ghcr.io/mightyshazam/port-forward-operator:v0.1.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: RUST_LOG
+              value: error
+          #        - name: OPENTELEMETRY_ENDPOINT_URL
+          #          value: {{ .Values.tracing.endpoint }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
