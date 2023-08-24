@@ -1,3 +1,6 @@
+extension_repo = "file://%s" % os.getcwd()
+v1alpha1.extension_repo(name='my-repo', url=extension_repo)
+# v1alpha1.extension(name='forwarded_service', )
 target = local(
     """
     platform=`uname -p`
@@ -53,7 +56,7 @@ ENTRYPOINT ["/build/controller"]
     match_in_env_vars=True)
 # docker_build('aware/spark', context='docker', dockerfile='docker/Dockerfile')
 k8s_yaml(kustomize('manifests/kubernetes/development'))
-# k8s_resource('csv-spark-api', port_forwards=["8080:8000"])
+k8s_resource('csv-spark-api', port_forwards=["8080:8000"])
 # k8s_resource('azurite', port_forwards=['10000:10000'])
 #local_resource(
 #    'create-survey-container',

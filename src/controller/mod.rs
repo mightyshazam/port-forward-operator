@@ -102,10 +102,6 @@ fn error_policy(_: Arc<ForwardedService>, error: &Error, _: Arc<Context>) -> Act
 }
 
 async fn reconcile(svc: Arc<ForwardedService>, ctx: Arc<Context>) -> Result<Action, Error> {
-    /*let trace_id = telemetry::get_trace_id();
-    Span::current().record("trace_id", &field::display(&trace_id));
-    let _timer = ctx.metrics.count_and_measure();
-    ctx.diagnostics.write().await.last_event = Utc::now();*/
     ctx.diagnostics.write().await.last_event = Utc::now();
     let ns = svc.namespace().unwrap(); // doc is namespace scoped
     let docs: Api<ForwardedService> = Api::namespaced(ctx.client.clone(), &ns);
@@ -233,12 +229,6 @@ impl ForwardedService {
 
     fn add_vector_args(&self, args: &mut Vec<String>) {
         let ns = self.spec.namespace.clone();
-        /*args.push("service".to_owned());
-        args.push("--name".to_owned());
-        args.push(self.name_any());
-        args.push("--kube-context".to_owned());
-        args.push(self.spec.kube_config.context.clone());
-        */
         args.push("--kubeconfig".to_owned());
         args.push(format!(
             "{}/{}",
@@ -259,7 +249,7 @@ impl ForwardedService {
         args.push("--namespace".to_owned());
         args.push(ns.or(self.namespace()).unwrap());
         args.push("port-forward".to_owned());
-        args.push(format!("svc/{}", self.spec.service.clone()).to_owned());
+        args.push(format!("svc/{}", self.spec.service.clone()));
     }
 
     fn create_service_and_deployment(&self, ctx: &Context) -> Result<(Service, Deployment), Error> {
@@ -269,10 +259,9 @@ impl ForwardedService {
         let mut args: Vec<String> = Vec::with_capacity(self.spec.ports.len() + 6);
         self.add_vector_args(&mut args);
         for port in &self.spec.ports {
-            // args.push("--ports".to_owned());
             args.push(port.to_string());
             let from = match port.split_once(':') {
-                Some((first, second)) => first,
+                Some((first, _second)) => first,
                 None => port,
             };
 

@@ -33,4 +33,7 @@ async fn main() {
             .await
         }
     };
+    if let Err(e) = result {
+        tracing::error!("exited with error: {}", e);
+    }
 }

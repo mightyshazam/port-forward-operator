@@ -1,8 +1,5 @@
-use k8s_openapi::api::{
-    core::v1::{Endpoints, Pod, Service},
-    discovery::v1::{Endpoint, EndpointSlice},
-};
-use kube::{api::ListParams, config::KubeConfigOptions, Api, Client, Config};
+use k8s_openapi::api::core::v1::Pod;
+use kube::{config::KubeConfigOptions, Api, Client, Config};
 
 use crate::error::Error;
 
@@ -33,6 +30,7 @@ pub(crate) async fn start(
 
     let client = Client::try_from(cfg).unwrap();
     let api = Api::<Pod>::namespaced(client, &service_options.namespace);
+
     let mut attempts = 1;
     loop {
         if attempts > max_retries {

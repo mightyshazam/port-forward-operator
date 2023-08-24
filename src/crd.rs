@@ -54,14 +54,15 @@ pub struct ForwardedServiceStatus {
 }
 
 impl KubeConfigReference {
-    pub fn key_any(&self) -> String {
+    #[allow(dead_code)]
+    pub(crate) fn key_any(&self) -> String {
         self.key.clone().unwrap_or("config".to_owned())
     }
 }
 
 impl ForwardedService {
     #[allow(dead_code)]
-    pub fn annotate(&self) -> BTreeMap<String, String> {
+    pub(crate) fn annotate(&self) -> BTreeMap<String, String> {
         let mut annotations: BTreeMap<String, String> = BTreeMap::new();
         annotations.insert(
             ANNOTATION_GENERATION.to_owned(),
@@ -80,5 +81,37 @@ impl Default for KubeConfigReference {
             user: None,
             cluster: None,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::KubeConfigReference;
+
+    #[test]
+    fn test_key_any_on_set_key() {
+        let reference = KubeConfigReference {
+            secret: "secret".to_owned(),
+            key: Some("key".to_owned()),
+            context: "context".to_owned(),
+            user: None,
+            cluster: None,
+        };
+        let value = reference.key_any();
+        let key = reference.key.unwrap();
+        assert_eq!(key, value);
+    }
+
+    #[test]
+    fn test_key_any_on_no_key() {
+        let reference = KubeConfigReference {
+            secret: "secret".to_owned(),
+            key: None,
+            context: "context".to_owned(),
+            user: None,
+            cluster: None,
+        };
+        let value = reference.key_any();
+        assert_eq!("config", value);
     }
 }

@@ -1,0 +1,14 @@
+FROM rustlang/rust:1.71-alpine3.17 as builder
+WORKDIR /build
+COPY . .
+
+RUN cargo build --release
+
+FROM alpine:3.17
+WORKDIR /app
+RUN apk --no-cache add ca-certificates \
+    && update-ca-certificates
+
+COPY --from=builder /build/target/release/controller .
+
+CMD ["/app/controller"]
