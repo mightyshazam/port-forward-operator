@@ -1,6 +1,6 @@
 FROM rust:1.71-bookworm as builder
 WORKDIR /build
-COPY Cargo.toml Cargo.lock .
+COPY Cargo.toml Cargo.lock ./
 
 RUN cargo fetch
 
