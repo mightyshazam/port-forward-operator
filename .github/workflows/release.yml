@@ -101,7 +101,7 @@ jobs:
           images: "ghcr.io/mightyshazam/port-forward-operator"
 
       - name: "Build and push Docker image"
-        uses: "docker/build-push-action@v3"
+        uses: "docker/build-push-action@v4"
         with:
           context: .
           file: Dockerfile
@@ -110,7 +110,7 @@ jobs:
           tags: ghcr.io/mightyshazam/port-forward-operator:latest,mightyshazam/port-forward-operator:v${{ needs.get-tag.outputs.pkg-version }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: "Build and push Docker alpine image"
-        uses: "docker/build-push-action@v3"
+        uses: "docker/build-push-action@v4"
         with:
           context: .
           file: Dockerfile.alpine
