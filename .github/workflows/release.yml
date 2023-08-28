@@ -108,6 +108,8 @@ jobs:
         with:
           context: .
           file: Dockerfile
+          build-args: |
+            VERSION=v${{ needs.get-tag.outputs.pkg-version }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ghcr.io/mightyshazam/port-forward-operator:latest,mightyshazam/port-forward-operator:v${{ needs.get-tag.outputs.pkg-version }}

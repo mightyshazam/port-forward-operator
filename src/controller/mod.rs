@@ -246,9 +246,12 @@ impl ForwardedService {
             args.push("--cluster".to_owned());
             args.push(kube_cluster.clone());
         }
+
         args.push("--namespace".to_owned());
         args.push(ns.or(self.namespace()).unwrap());
         args.push("port-forward".to_owned());
+        args.push("--address".into());
+        args.push("0.0.0.0".into());
         args.push(format!("svc/{}", self.spec.service.clone()));
     }
 
