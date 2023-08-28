@@ -19,8 +19,8 @@ spec:
           args:
             - controller
             - --image
-            - ghcr.io/mightyshazam/port-forward-operator:v0.1.0
-          image: ghcr.io/mightyshazam/port-forward-operator:v0.1.0
+            - ghcr.io/mightyshazam/port-forward-operator:v0.1.4
+          image: ghcr.io/mightyshazam/port-forward-operator:v0.1.4
           imagePullPolicy: IfNotPresent
           resources:
             limits:
