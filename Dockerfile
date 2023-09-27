@@ -6,7 +6,7 @@ RUN cat data
 RUN wget https://github.com/mightyshazam/port-forward-operator/releases/download/${VERSION}/controller-`cat data`-unknown-linux-musl.tar.gz \
     && tar -xvf controller-`cat data`-unknown-linux-musl.tar.gz
 
-FROM alpine:3.17
+FROM debian:bookworm-slim
 WORKDIR /app
 RUN apt update \
     && apt install -y openssl ca-certificates \
