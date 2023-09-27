@@ -54,14 +54,4 @@ ENTRYPOINT ["/build/controller"]
     ignore=['.fingerprint', 'build', 'deps', 'examples', 'incremental'],
     only=['.'],
     match_in_env_vars=True)
-# docker_build('aware/spark', context='docker', dockerfile='docker/Dockerfile')
 k8s_yaml(kustomize('manifests/kubernetes/development'))
-k8s_resource('csv-spark-api', port_forwards=["8080:8000"])
-# k8s_resource('azurite', port_forwards=['10000:10000'])
-#local_resource(
-#    'create-survey-container',
-#    cmd='az storage container create -n survey --connection-string ${AZURE_CONNECTION_STRING}',
-#    resource_deps=['csv-spark-api'],
-#    env={
-#        'AZURE_CONNECTION_STRING': 'DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;'
-#    })
